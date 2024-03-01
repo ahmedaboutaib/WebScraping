@@ -5,10 +5,10 @@ import schedule
 import time
 from datetime import datetime
 
-def main():
+def main(date_actual):
     try:
-        # Récupère la page web
-        page = requests.get("https://mobile.yallakora.com/match-center/?date=11/23/2022#matchesclipPrev")
+        # Récupère la page web pour la date actuelle
+        page = requests.get(f"https://mobile.yallakora.com/match-center/?date={date_actual}#matchesclipPrev")
         
         # Extrait le contenu HTML de la page
         src = page.content 
@@ -76,12 +76,14 @@ def main():
         print(f"An error occurred: {str(e)}")
 
 def job():
-    # Fonction pour exécuter la tâche principale
-    print("Running job...")
-    main()
+    # Récupère la date actuelle au format MM/dd/yyyy
+    date_actual = datetime.now().strftime("%m/%d/%Y")
+    
+    # Appelle la fonction principale avec la date actuelle
+    main(date_actual)
 
-# Planifie l'exécution de la tâche toutes les 10 minutes
-schedule.every(2).minutes.do(job)
+# Planifie l'exécution de la tâche à 23h00 chaque jour
+schedule.every().day.at("23:00").do(job)
 
 # Exécute la tâche une fois au début
 job()
